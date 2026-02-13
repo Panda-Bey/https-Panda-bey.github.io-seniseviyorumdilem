@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sevgililer Günü Sürprizi ❤️</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#ff4e8a,#ff9ecb);
+    overflow-x: hidden;
+    color: white;
+    text-align: center;
+}
+.container {
+    padding: 40px 20px;
+    max-width: 900px;
+    margin: auto;
+}
+h1 { font-size: 42px; margin-bottom: 10px; }
+h2 { font-weight: normal; opacity: 0.9; }
+.card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    margin: 20px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+button {
+    background: white;
+    color: #ff4e8a;
+    border: none;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 8px;
+    transition: 0.25s;
+}
+button:hover { transform: scale(1.08); }
+#jarMessage {
+    font-size: 20px;
+    margin-top: 15px;
+    min-height: 60px;
+}
+#gameArea {
+    position: relative;
+    height: 260px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    overflow: hidden;
+}
+.heart {
+    position: absolute;
+    font-size: 28px;
+    cursor: pointer;
+    animation: fall linear forwards;
+}
+@keyframes fall {
+    from { transform: translateY(-40px); }
+    to { transform: translateY(300px); }
+}
+#score {
+    font-size: 22px;
+    margin-top: 10px;
+}
+footer {
+    margin-top: 40px;
+    opacity: 0.8;
+    font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Sevgililer Günü Sürprizin 💖</h1>
+    <h2>Bu sayfa senin için hazırlandı</h2>
+
+    <div class="card">
+        <h2>Benim Kalbimden Sana</h2>
+        <p>
+        Seninle geçen her an, sıradan bir günü bile özel yapıyor.
+        Gülüşün huzur, sesin ev gibi.
+        Bu küçük site sana olan sevgimin dijital hali.
+        İyi ki varsın.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>Sevgi Kavanozu 🫶</h2>
+        <button onclick="pullMessage()">Kavanozdan Bir Not Çek</button>
+        <div id="jarMessage"></div>
+    </div>
+
+    <div class="card">
+        <h2>Kalbimi Topla Oyunu ❤️</h2>
+        <button onclick="startGame()">Oyunu Başlat</button>
+        <div id="gameArea"></div>
+        <div id="score">Skor: 0</div>
+    </div>
+
+    <footer>
+        Senin için özel hazırlandı ✨
+    </footer>
+</div>
+
+<script>
+const messages = [
+"Gülüşün günümü güzelleştiriyor",
+"Yanındayken dünya daha huzurlu",
+"Sen benim en güzel alışkanlığımsın",
+"İyi ki seni seçmişim",
+"Sarılman tüm yorgunluğumu siliyor",
+"Seninle yaşlanmak istiyorum",
+"Gözlerine bakınca her şey tamam oluyor",
+"Kalbimin en güzel yeri senin"
+];
+
+function pullMessage() {
+    const msg = messages[Math.floor(Math.random()*messages.length)];
+    document.getElementById("jarMessage").innerText = msg;
+}
+
+let gameInterval;
+let score = 0;
+
+function startGame() {
+    score = 0;
+    document.getElementById("score").innerText = "Skor: 0";
+    const area = document.getElementById("gameArea");
+    area.innerHTML = "";
+
+    clearInterval(gameInterval);
+    gameInterval = setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "❤️";
+        heart.style.left = Math.random()*90 + "%";
+        heart.style.animationDuration = (2 + Math.random()*2) + "s";
+
+        heart.onclick = () => {
+            score++;
+            document.getElementById("score").innerText = "Skor: " + score;
+            heart.remove();
+        };
+
+        area.appendChild(heart);
+        setTimeout(()=> heart.remove(), 4000);
+    }, 600);
+
+    setTimeout(()=>{
+        clearInterval(gameInterval);
+        alert("Oyun bitti! Topladığın kalp: " + score + " ❤️");
+    }, 15000);
+}
+</script>
+
+</body>
+</html>
