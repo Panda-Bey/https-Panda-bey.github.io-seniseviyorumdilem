@@ -2,182 +2,251 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sevgililer Günü Sürprizi ❤️</title>
-<style>
-* { box-sizing: border-box; }
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg,#ff4e8a,#ff9ecb);
-    color: white;
-}/* Açılış ekranı */ #intro { position: fixed; inset: 0; background: linear-gradient(135deg,#ff4e8a,#ff9ecb); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; z-index: 9999; }
+<title>Sevgililer Günü Sürprizi ❤️</title><!-- ======================
+DOSYA YAPISI (GitHub için)
+index.html  (BU DOSYA)
+/music.mp3  (arka plan müziği — sen ekleyeceksin)
+/photos/1.jpg vb (isteğe bağlı fotoğraflar)
+====================== --><style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background: radial-gradient(circle at top,#ff7eb3,#ff4e8a,#c9184a);
+  color:white;
+}
 
-.intro-box { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+/* INTRO */
+#intro{
+ position:fixed; inset:0;
+ display:flex; align-items:center; justify-content:center;
+ text-align:center; padding:30px;
+ background:linear-gradient(135deg,#ff4e8a,#ff9ecb);
+ z-index:9999;
+}
+.intro-box{
+ background:rgba(255,255,255,.18);
+ backdrop-filter:blur(12px);
+ border-radius:22px;
+ padding:34px;
+ max-width:620px;
+ box-shadow:0 15px 40px rgba(0,0,0,.3);
+ animation:fadeIn .8s ease;
+}
+@keyframes fadeIn{from{opacity:0; transform:translateY(20px)} to{opacity:1}}
 
-button { background: white; color: #ff4e8a; border: none; padding: 12px 20px; border-radius: 12px; font-size: 16px; cursor: pointer; margin: 6px; transition: 0.2s; } button:hover { transform: scale(1.08); }
+button{
+ background:white;
+ color:#ff4e8a;
+ border:none;
+ padding:12px 18px;
+ border-radius:12px;
+ font-size:15px;
+ cursor:pointer;
+ margin:6px;
+ transition:.2s;
+}
+button:hover{transform:scale(1.08)}
 
-/* Ana layout */ #app { display: none; }
+/* LAYOUT */
+#app{display:none}
+.layout{display:flex; min-height:100vh}
 
-.layout { display: flex; min-height: 100vh; }
+.sidebar{
+ width:230px;
+ background:rgba(0,0,0,.28);
+ padding:18px 10px;
+ backdrop-filter:blur(10px);
+}
+.sidebar h3{text-align:center;margin-top:0}
+.menu-btn{width:100%; margin:7px 0}
 
-.sidebar { width: 220px; background: rgba(0,0,0,0.25); padding: 20px 10px; }
+.content{flex:1; padding:28px}
 
-.sidebar h3 { text-align: center; margin-top: 0; }
+.card{
+ background:rgba(255,255,255,.16);
+ backdrop-filter:blur(12px);
+ border-radius:22px;
+ padding:26px;
+ box-shadow:0 12px 34px rgba(0,0,0,.25);
+ max-width:920px;
+ animation:fadeIn .5s ease;
+}
 
-.menu-btn { width: 100%; margin: 8px 0; }
+.section{display:none}
+.section.active{display:block}
 
-.content { flex: 1; padding: 30px; }
+/* KAVANOZ */
+.jar{font-size:96px; cursor:pointer; transition:.2s}
+.jar:hover{transform:scale(1.1) rotate(-3deg)}
+#jarText{font-size:20px; margin-top:16px; min-height:60px}
 
-.card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 900px; }
+/* OYUN */
+#gameArea{
+ position:relative;
+ height:320px;
+ background:rgba(255,255,255,.12);
+ border-radius:20px;
+ overflow:hidden;
+ margin-top:12px;
+}
+.heart{
+ position:absolute;
+ font-size:28px;
+ cursor:pointer;
+ animation:fall linear forwards;
+}
+@keyframes fall{
+ from{transform:translateY(-40px)}
+ to{transform:translateY(360px)}
+}
+#score{font-size:20px;margin-top:10px}
 
-.section { display: none; } .section.active { display: block; }
+/* GALERİ */
+.gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px}
+.gallery img{width:100%; border-radius:14px; object-fit:cover; height:140px}
 
-/* Kavanoz */ .jar { font-size: 90px; cursor: pointer; }
+.small{opacity:.85;font-size:14px}
 
-#jarText { font-size: 20px; margin-top: 15px; min-height: 60px; }
+.music-bar{
+ margin-top:10px;
+ font-size:14px;
+ opacity:.9;
+}
 
-/* Oyun */ #gameArea { position: relative; height: 300px; background: rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; margin-top: 15px; }
-
-.heart { position: absolute; font-size: 28px; cursor: pointer; animation: fall linear forwards; }
-
-@keyframes fall { from { transform: translateY(-40px); } to { transform: translateY(340px); } }
-
-#score { font-size: 20px; margin-top: 10px; }
-
-.small { opacity: 0.85; font-size: 14px; }
-
-@media (max-width:700px) { .layout { flex-direction: column; } .sidebar { width: 100%; display: flex; gap: 8px; overflow-x: auto; } .menu-btn { flex: 1; } } </style>
-
-</head>
-<body><!-- AÇILIŞ --><div id="intro">
-    <div class="intro-box">
-        <h1>Seni Seviyorum ❤️</h1>
-        <p>
-        Sevgililer günün kutlu olsun sevgilim. Yanında olamasam da bu site
-        sonsuza kadar yanında olacak. İstediğin zaman girebilirsin.
-        Ara ara değişiklikler olacak — kaçırma.
-        </p>
-        <h3>Beni seviyor musun?</h3>
-        <button onclick="startApp()">Evet</button>
-        <button onclick="startApp()">Evet 💖</button>
+@media(max-width:720px){
+ .layout{flex-direction:column}
+ .sidebar{width:100%; display:flex; gap:8px; overflow-x:auto}
+ .menu-btn{flex:1}
+}
+</style></head>
+<body><!-- AUDIO --><audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio><!-- INTRO --><div id="intro">
+ <div class="intro-box">
+  <h1>Seni Seviyorum ❤️</h1>
+  <p>
+   Sevgililer günün kutlu olsun sevgilim. Yanında olamasam da bu site
+   sonsuza kadar yanında olacak. İstediğin zaman girebilirsin.
+   Ara ara değişiklikler olacak — kaçırma.
+  </p>
+  <h3>Beni seviyor musun?</h3>
+  <button onclick="startApp()">Evet</button>
+  <button onclick="startApp()">Evet 💖</button>
+  <div class="small">(Müzik başlayacak)</div>
+ </div>
+</div><!-- APP --><div id="app" class="layout"> <div class="sidebar">
+  <h3>Menü</h3>
+  <button class="menu-btn" onclick="showSection('home')">Ana Sayfa</button>
+  <button class="menu-btn" onclick="showSection('jar')">Sevgi Kavanozu</button>
+  <button class="menu-btn" onclick="showSection('game')">Kalp Oyunu</button>
+  <button class="menu-btn" onclick="showSection('letter')">Mektup</button>
+  <button class="menu-btn" onclick="showSection('gallery')">Foto Galeri</button>
+ </div> <div class="content">  <!-- HOME -->  <div id="home" class="section active">
+   <div class="card">
+    <h2>Hoş geldin sevgilim 💌</h2>
+    <p>
+     Bu site yaşayan bir hediye. Sürekli yeni sürprizler eklenecek.
+     Menüden istediğin bölümü açabilirsin.
+    </p>
+    <button onclick="toggleMusic()">Müziği Aç / Kapat</button>
+    <div class="music-bar">Arka plan müziği romantik mod 🎵</div>
+   </div>
+  </div>  <!-- JAR -->  <div id="jar" class="section">
+   <div class="card">
+    <h2>Sevgi Kavanozu</h2>
+    <div class="jar" onclick="pullLove()">🏺</div>
+    <p>Her tıklamada yeni bir sevgi notu çıkar.</p>
+    <div id="jarText"></div>
+   </div>
+  </div>  <!-- GAME -->  <div id="game" class="section">
+   <div class="card">
+    <h2>Kalbimi Topla Oyunu ❤️</h2>
+    <button onclick="startGame()">Oyunu Başlat</button>
+    <div id="gameArea"></div>
+    <div id="score">Skor: 0</div>
+   </div>
+  </div>  <!-- LETTER -->  <div id="letter" class="section">
+   <div class="card">
+    <h2>Sana Mektubum</h2>
+    <p>
+     Sen hayatıma geldiğinden beri birçok şey daha anlamlı.
+     Bu site büyümeye devam edecek — tıpkı sana olan sevgim gibi.
+     Her gün yeni bir iz bırakacağım buraya.
+    </p>
+   </div>
+  </div>  <!-- GALLERY -->  <div id="gallery" class="section">
+   <div class="card">
+    <h2>Anılarımız</h2>
+    <div class="gallery">
+      <!-- Foto eklemek için /photos klasörüne at → isim ver → aşağı kopyala -->
+      <!-- <img src="photos/1.jpg"> -->
+      <!-- <img src="photos/2.jpg"> -->
     </div>
-</div><!-- ANA UYGULAMA --><div id="app" class="layout"><div class="sidebar">
-    <h3>Menü</h3>
-    <button class="menu-btn" onclick="showSection('home')">Ana Sayfa</button>
-    <button class="menu-btn" onclick="showSection('jar')">Sevgi Kavanozu</button>
-    <button class="menu-btn" onclick="showSection('game')">Kalp Oyunu</button>
-    <button class="menu-btn" onclick="showSection('letter')">Mektup</button>
-</div>
-
-<div class="content">
-
-    <!-- HOME -->
-    <div id="home" class="section active">
-        <div class="card">
-            <h2>Hoş geldin sevgilim 💌</h2>
-            <p>
-            Bu site yaşayan bir hediye. Zamanla yeni sürprizler eklenecek.
-            Soldaki menüden istediğin bölümü açabilirsin.
-            </p>
-            <p class="small">Her gün gir, mutlaka yeni bir şey olacak.</p>
-        </div>
-    </div>
-
-    <!-- JAR -->
-    <div id="jar" class="section">
-        <div class="card">
-            <h2>Sevgi Kavanozu</h2>
-            <div class="jar" onclick="pullLove()">🏺</div>
-            <p>Kavanoza her tıkladığında yeni bir not çekersin.</p>
-            <div id="jarText"></div>
-        </div>
-    </div>
-
-    <!-- GAME -->
-    <div id="game" class="section">
-        <div class="card">
-            <h2>Kalbimi Topla Oyunu ❤️</h2>
-            <button onclick="startGame()">Oyunu Başlat</button>
-            <div id="gameArea"></div>
-            <div id="score">Skor: 0</div>
-        </div>
-    </div>
-
-    <!-- LETTER -->
-    <div id="letter" class="section">
-        <div class="card">
-            <h2>Sana Mektubum</h2>
-            <p>
-            Sen hayatıma geldiğinden beri birçok şey daha anlamlı.
-            Gülüşün içimi rahatlatıyor, varlığın güç veriyor.
-            Bu dijital sayfa bile sana olan sevgimin küçük bir yansıması.
-            Daha yazacak çok şeyim var… ve eklemeye devam edeceğim.
-            </p>
-        </div>
-    </div>
-
-</div>
-
+    <p class="small">Fotoğrafları repo içine ekleyince otomatik görünür.</p>
+   </div>
+  </div> </div>
 </div><script>
-function startApp() {
-    document.getElementById('intro').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
+function startApp(){
+ document.getElementById('intro').style.display='none';
+ document.getElementById('app').style.display='flex';
+ const m=document.getElementById('bgMusic');
+ m.volume=0.6;
+ m.play().catch(()=>{});
 }
 
-function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+function toggleMusic(){
+ const m=document.getElementById('bgMusic');
+ if(m.paused) m.play(); else m.pause();
 }
 
-/* Sevgi kavanozu — ekleme yapabilirsin */
-const loveNotes = [
+function showSection(id){
+ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+}
+
+/* ===== Sevgi notları — buraya ekleme yap → eskiler kalır ===== */
+const loveNotes=[
 "Seninle konuşmak bile günümü değiştiriyor",
-"Sesini duyunca içim yumuşuyor",
-"Sana sarılmak en güvenli yer",
-"Gülüşün benim ödülüm",
-"İyi ki hayatımdasın",
-"Sen benim favori mucizemsin",
-"Yanında zaman hızlı geçiyor",
-"Kalbimin en net cevabı sensin"
+"Gülüşün benim en sevdiğim manzara",
+"Yanında zaman yumuşuyor",
+"Sana sarılmak dünyayı durduruyor",
+"İyi ki varsın",
+"Kalbim seni seçti",
+"Her halin güzel",
+"Benim evim sensin"
 ];
-
-function pullLove() {
-    const note = loveNotes[Math.floor(Math.random()*loveNotes.length)];
-    document.getElementById('jarText').innerText = note;
+function pullLove(){
+ const note=loveNotes[Math.floor(Math.random()*loveNotes.length)];
+ document.getElementById('jarText').innerText=note;
 }
 
-/* Oyun */
-let gameInterval;
-let score = 0;
-
-function startGame() {
-    score = 0;
-    document.getElementById('score').innerText = 'Skor: 0';
-    const area = document.getElementById('gameArea');
-    area.innerHTML = '';
-
-    clearInterval(gameInterval);
-    gameInterval = setInterval(() => {
-        const heart = document.createElement('div');
-        heart.className = 'heart';
-        heart.innerText = '❤️';
-        heart.style.left = Math.random()*90 + '%';
-        heart.style.animationDuration = (2 + Math.random()*2) + 's';
-
-        heart.onclick = () => {
-            score++;
-            document.getElementById('score').innerText = 'Skor: ' + score;
-            heart.remove();
-        };
-
-        area.appendChild(heart);
-        setTimeout(()=> heart.remove(), 4000);
-    }, 600);
-
-    setTimeout(()=>{
-        clearInterval(gameInterval);
-        alert('Oyun bitti ❤️ Toplanan kalp: ' + score);
-    }, 15000);
+/* ===== OYUN ===== */
+let gameInterval; let score=0;
+function startGame(){
+ score=0;
+ document.getElementById('score').innerText='Skor: 0';
+ const area=document.getElementById('gameArea');
+ area.innerHTML='';
+ clearInterval(gameInterval);
+ gameInterval=setInterval(()=>{
+  const h=document.createElement('div');
+  h.className='heart';
+  h.innerText='❤️';
+  h.style.left=Math.random()*90+'%';
+  h.style.animationDuration=(2+Math.random()*2)+'s';
+  h.onclick=()=>{
+    score++;
+    document.getElementById('score').innerText='Skor: '+score;
+    h.remove();
+  };
+  area.appendChild(h);
+  setTimeout(()=>h.remove(),4000);
+ },550);
+ setTimeout(()=>{
+  clearInterval(gameInterval);
+  alert('Oyun bitti ❤️ Skor: '+score);
+ },15000);
 }
 </script></body>
 </html>
