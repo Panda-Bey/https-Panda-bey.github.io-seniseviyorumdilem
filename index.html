@@ -1,149 +1,172 @@
-<!DOCTYPE html>
-<html lang="tr">
+<!DOCTYPE html><html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sevgililer Günü Sürprizi ❤️</title>
 <style>
+* { box-sizing: border-box; }
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg,#ff4e8a,#ff9ecb);
-    overflow-x: hidden;
     color: white;
-    text-align: center;
-}
-.container {
-    padding: 40px 20px;
-    max-width: 900px;
-    margin: auto;
-}
-h1 { font-size: 42px; margin-bottom: 10px; }
-h2 { font-weight: normal; opacity: 0.9; }
-.card {
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 25px;
-    margin: 20px 0;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-button {
-    background: white;
-    color: #ff4e8a;
-    border: none;
-    padding: 14px 22px;
-    border-radius: 12px;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 8px;
-    transition: 0.25s;
-}
-button:hover { transform: scale(1.08); }
-#jarMessage {
-    font-size: 20px;
-    margin-top: 15px;
-    min-height: 60px;
-}
-#gameArea {
-    position: relative;
-    height: 260px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 20px;
-    overflow: hidden;
-}
-.heart {
-    position: absolute;
-    font-size: 28px;
-    cursor: pointer;
-    animation: fall linear forwards;
-}
-@keyframes fall {
-    from { transform: translateY(-40px); }
-    to { transform: translateY(300px); }
-}
-#score {
-    font-size: 22px;
-    margin-top: 10px;
-}
-footer {
-    margin-top: 40px;
-    opacity: 0.8;
-    font-size: 14px;
-}
-</style>
+}/* Açılış ekranı */ #intro { position: fixed; inset: 0; background: linear-gradient(135deg,#ff4e8a,#ff9ecb); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; z-index: 9999; }
+
+.intro-box { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+
+button { background: white; color: #ff4e8a; border: none; padding: 12px 20px; border-radius: 12px; font-size: 16px; cursor: pointer; margin: 6px; transition: 0.2s; } button:hover { transform: scale(1.08); }
+
+/* Ana layout */ #app { display: none; }
+
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar { width: 220px; background: rgba(0,0,0,0.25); padding: 20px 10px; }
+
+.sidebar h3 { text-align: center; margin-top: 0; }
+
+.menu-btn { width: 100%; margin: 8px 0; }
+
+.content { flex: 1; padding: 30px; }
+
+.card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 900px; }
+
+.section { display: none; } .section.active { display: block; }
+
+/* Kavanoz */ .jar { font-size: 90px; cursor: pointer; }
+
+#jarText { font-size: 20px; margin-top: 15px; min-height: 60px; }
+
+/* Oyun */ #gameArea { position: relative; height: 300px; background: rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; margin-top: 15px; }
+
+.heart { position: absolute; font-size: 28px; cursor: pointer; animation: fall linear forwards; }
+
+@keyframes fall { from { transform: translateY(-40px); } to { transform: translateY(340px); } }
+
+#score { font-size: 20px; margin-top: 10px; }
+
+.small { opacity: 0.85; font-size: 14px; }
+
+@media (max-width:700px) { .layout { flex-direction: column; } .sidebar { width: 100%; display: flex; gap: 8px; overflow-x: auto; } .menu-btn { flex: 1; } } </style>
+
 </head>
-<body>
-
-<div class="container">
-    <h1>Sevgililer Günü Sürprizin 💖</h1>
-    <h2>Bu sayfa senin için hazırlandı</h2>
-
-    <div class="card">
-        <h2>Benim Kalbimden Sana</h2>
+<body><!-- AÇILIŞ --><div id="intro">
+    <div class="intro-box">
+        <h1>Seni Seviyorum ❤️</h1>
         <p>
-        Seninle geçen her an, sıradan bir günü bile özel yapıyor.
-        Gülüşün huzur, sesin ev gibi.
-        Bu küçük site sana olan sevgimin dijital hali.
-        İyi ki varsın.
+        Sevgililer günün kutlu olsun sevgilim. Yanında olamasam da bu site
+        sonsuza kadar yanında olacak. İstediğin zaman girebilirsin.
+        Ara ara değişiklikler olacak — kaçırma.
         </p>
+        <h3>Beni seviyor musun?</h3>
+        <button onclick="startApp()">Evet</button>
+        <button onclick="startApp()">Evet 💖</button>
     </div>
-
-    <div class="card">
-        <h2>Sevgi Kavanozu 🫶</h2>
-        <button onclick="pullMessage()">Kavanozdan Bir Not Çek</button>
-        <div id="jarMessage"></div>
-    </div>
-
-    <div class="card">
-        <h2>Kalbimi Topla Oyunu ❤️</h2>
-        <button onclick="startGame()">Oyunu Başlat</button>
-        <div id="gameArea"></div>
-        <div id="score">Skor: 0</div>
-    </div>
-
-    <footer>
-        Senin için özel hazırlandı ✨
-    </footer>
+</div><!-- ANA UYGULAMA --><div id="app" class="layout"><div class="sidebar">
+    <h3>Menü</h3>
+    <button class="menu-btn" onclick="showSection('home')">Ana Sayfa</button>
+    <button class="menu-btn" onclick="showSection('jar')">Sevgi Kavanozu</button>
+    <button class="menu-btn" onclick="showSection('game')">Kalp Oyunu</button>
+    <button class="menu-btn" onclick="showSection('letter')">Mektup</button>
 </div>
 
-<script>
-const messages = [
-"Gülüşün günümü güzelleştiriyor",
-"Yanındayken dünya daha huzurlu",
-"Sen benim en güzel alışkanlığımsın",
-"İyi ki seni seçmişim",
-"Sarılman tüm yorgunluğumu siliyor",
-"Seninle yaşlanmak istiyorum",
-"Gözlerine bakınca her şey tamam oluyor",
-"Kalbimin en güzel yeri senin"
-];
+<div class="content">
 
-function pullMessage() {
-    const msg = messages[Math.floor(Math.random()*messages.length)];
-    document.getElementById("jarMessage").innerText = msg;
+    <!-- HOME -->
+    <div id="home" class="section active">
+        <div class="card">
+            <h2>Hoş geldin sevgilim 💌</h2>
+            <p>
+            Bu site yaşayan bir hediye. Zamanla yeni sürprizler eklenecek.
+            Soldaki menüden istediğin bölümü açabilirsin.
+            </p>
+            <p class="small">Her gün gir, mutlaka yeni bir şey olacak.</p>
+        </div>
+    </div>
+
+    <!-- JAR -->
+    <div id="jar" class="section">
+        <div class="card">
+            <h2>Sevgi Kavanozu</h2>
+            <div class="jar" onclick="pullLove()">🏺</div>
+            <p>Kavanoza her tıkladığında yeni bir not çekersin.</p>
+            <div id="jarText"></div>
+        </div>
+    </div>
+
+    <!-- GAME -->
+    <div id="game" class="section">
+        <div class="card">
+            <h2>Kalbimi Topla Oyunu ❤️</h2>
+            <button onclick="startGame()">Oyunu Başlat</button>
+            <div id="gameArea"></div>
+            <div id="score">Skor: 0</div>
+        </div>
+    </div>
+
+    <!-- LETTER -->
+    <div id="letter" class="section">
+        <div class="card">
+            <h2>Sana Mektubum</h2>
+            <p>
+            Sen hayatıma geldiğinden beri birçok şey daha anlamlı.
+            Gülüşün içimi rahatlatıyor, varlığın güç veriyor.
+            Bu dijital sayfa bile sana olan sevgimin küçük bir yansıması.
+            Daha yazacak çok şeyim var… ve eklemeye devam edeceğim.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+</div><script>
+function startApp() {
+    document.getElementById('intro').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
 }
 
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+/* Sevgi kavanozu — ekleme yapabilirsin */
+const loveNotes = [
+"Seninle konuşmak bile günümü değiştiriyor",
+"Sesini duyunca içim yumuşuyor",
+"Sana sarılmak en güvenli yer",
+"Gülüşün benim ödülüm",
+"İyi ki hayatımdasın",
+"Sen benim favori mucizemsin",
+"Yanında zaman hızlı geçiyor",
+"Kalbimin en net cevabı sensin"
+];
+
+function pullLove() {
+    const note = loveNotes[Math.floor(Math.random()*loveNotes.length)];
+    document.getElementById('jarText').innerText = note;
+}
+
+/* Oyun */
 let gameInterval;
 let score = 0;
 
 function startGame() {
     score = 0;
-    document.getElementById("score").innerText = "Skor: 0";
-    const area = document.getElementById("gameArea");
-    area.innerHTML = "";
+    document.getElementById('score').innerText = 'Skor: 0';
+    const area = document.getElementById('gameArea');
+    area.innerHTML = '';
 
     clearInterval(gameInterval);
     gameInterval = setInterval(() => {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerText = "❤️";
-        heart.style.left = Math.random()*90 + "%";
-        heart.style.animationDuration = (2 + Math.random()*2) + "s";
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerText = '❤️';
+        heart.style.left = Math.random()*90 + '%';
+        heart.style.animationDuration = (2 + Math.random()*2) + 's';
 
         heart.onclick = () => {
             score++;
-            document.getElementById("score").innerText = "Skor: " + score;
+            document.getElementById('score').innerText = 'Skor: ' + score;
             heart.remove();
         };
 
@@ -153,10 +176,8 @@ function startGame() {
 
     setTimeout(()=>{
         clearInterval(gameInterval);
-        alert("Oyun bitti! Topladığın kalp: " + score + " ❤️");
+        alert('Oyun bitti ❤️ Toplanan kalp: ' + score);
     }, 15000);
 }
-</script>
-
-</body>
+</script></body>
 </html>
