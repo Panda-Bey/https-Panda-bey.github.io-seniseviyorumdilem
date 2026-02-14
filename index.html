@@ -1,19 +1,14 @@
-<!DOCTYPE html><html lang="tr">
-<head>
+<!DOCTYPE html><html lang="tr"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sevgililer Günümüz Kutlu Olsun Sevgilim ❤️</title><!-- ======================
-DOSYA YAPISI (GitHub için)
-index.html  (BU DOSYA)
-/music.mp3  (arka plan müziği — sen ekleyeceksin)
-/photos/1.jpg vb (isteğe bağlı fotoğraflar)
-====================== --><style>
+<title>Sevgililer Günümüz Kutlu Olsun Sevgilim ❤️</title><style>
 *{box-sizing:border-box}
 body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
   background: radial-gradient(circle at top,#ff7eb3,#ff4e8a,#c9184a);
   color:white;
+  overflow-x:hidden;
 }
 
 /* INTRO */
@@ -48,6 +43,19 @@ button{
 }
 button:hover{transform:scale(1.08)}
 
+/* FLOATING HEART BACKGROUND */
+.heart-bg{
+ position:fixed;
+ font-size:18px;
+ opacity:.25;
+ pointer-events:none;
+ animation:floatUp linear forwards;
+}
+@keyframes floatUp{
+ from{transform:translateY(105vh)}
+ to{transform:translateY(-10vh)}
+}
+
 /* LAYOUT */
 #app{display:none}
 .layout{display:flex; min-height:100vh}
@@ -71,15 +79,36 @@ button:hover{transform:scale(1.08)}
  box-shadow:0 12px 34px rgba(0,0,0,.25);
  max-width:920px;
  animation:fadeIn .5s ease;
+ position:relative;
+ overflow:hidden;
 }
 
 .section{display:none}
 .section.active{display:block}
 
+/* DAILY MESSAGE */
+.daily-box{
+ margin-top:14px;
+ padding:14px;
+ background:rgba(255,255,255,.22);
+ border-radius:14px;
+ font-size:16px;
+ animation:fadeIn .4s ease;
+}
+
 /* KAVANOZ */
 .jar{font-size:96px; cursor:pointer; transition:.2s}
 .jar:hover{transform:scale(1.1) rotate(-3deg)}
-#jarText{font-size:20px; margin-top:16px; min-height:60px}
+#jarText{
+ font-size:20px; 
+ margin-top:16px; 
+ min-height:60px;
+ animation:notePop .35s ease;
+}
+@keyframes notePop{
+ from{opacity:0; transform:scale(.8)}
+ to{opacity:1; transform:scale(1)}
+}
 
 /* OYUN */
 #gameArea{
@@ -101,26 +130,21 @@ button:hover{transform:scale(1.08)}
  to{transform:translateY(360px)}
 }
 #score{font-size:20px;margin-top:10px}
+#best{font-size:14px; opacity:.9}
 
 /* GALERİ */
 .gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px}
 .gallery img{width:100%; border-radius:14px; object-fit:cover; height:140px}
 
 .small{opacity:.85;font-size:14px}
-
-.music-bar{
- margin-top:10px;
- font-size:14px;
- opacity:.9;
-}
+.music-bar{margin-top:10px;font-size:14px;opacity:.9}
 
 @media(max-width:720px){
  .layout{flex-direction:column}
  .sidebar{width:100%; display:flex; gap:8px; overflow-x:auto}
  .menu-btn{flex:1}
 }
-</style></head>
-<body><!-- AUDIO --><audio id="bgMusic" loop>
+</style></head><body><audio id="bgMusic" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio><!-- INTRO --><div id="intro">
  <div class="intro-box">
@@ -151,6 +175,7 @@ button:hover{transform:scale(1.08)}
     </p>
     <button onclick="toggleMusic()">Müziği Aç / Kapat</button>
     <div class="music-bar">Arka plan müziği romantik mod 🎵</div>
+    <div id="dailyMessage" class="daily-box"></div>
    </div>
   </div>  <!-- JAR -->  <div id="jar" class="section">
    <div class="card">
@@ -165,6 +190,7 @@ button:hover{transform:scale(1.08)}
     <button onclick="startGame()">Oyunu Başlat</button>
     <div id="gameArea"></div>
     <div id="score">Skor: 0</div>
+    <div id="best"></div>
    </div>
   </div>  <!-- LETTER -->  <div id="letter" class="section">
    <div class="card">
@@ -172,27 +198,39 @@ button:hover{transform:scale(1.08)}
     <p>
      Sen hayatıma geldiğinden beri birçok şey daha anlamlı.
      Bu site büyümeye devam edecek — tıpkı sana olan sevgim gibi.
-     Her gün yeni bir iz bırakacağım buraya.Seni seviyorum Dilem
+     Her gün yeni bir iz bırakacağım buraya. Seni seviyorum Dilem
     </p>
    </div>
   </div>  <!-- GALLERY -->  <div id="gallery" class="section">
    <div class="card">
     <h2>Anılarımız</h2>
     <div class="gallery">
-      <!-- Foto eklemek için /photos klasörüne at → isim ver → aşağı kopyala -->
       <!-- <img src="photos/1.jpg"> -->
-      <!-- <img src="photos/2.jpg"> -->
     </div>
-    <p class="small">Yakında Burayı Bizimle Doldurucam Sevgilim.</p>
+    <p class="small">Fotoğraflar gelince burası dolacak ❤️</p>
    </div>
   </div> </div>
 </div><script>
+
+/* ===== FLOATING HEARTS ===== */
+setInterval(()=>{
+ const h=document.createElement('div');
+ h.className='heart-bg';
+ h.innerText='❤';
+ h.style.left=Math.random()*100+'%';
+ h.style.animationDuration=(6+Math.random()*6)+'s';
+ document.body.appendChild(h);
+ setTimeout(()=>h.remove(),12000);
+},900);
+
 function startApp(){
  document.getElementById('intro').style.display='none';
  document.getElementById('app').style.display='flex';
  const m=document.getElementById('bgMusic');
  m.volume=0.6;
  m.play().catch(()=>{});
+ showDailyMessage();
+ loadBest();
 }
 
 function toggleMusic(){
@@ -205,7 +243,23 @@ function showSection(id){
  document.getElementById(id).classList.add('active');
 }
 
-/* ===== Sevgi notları — buraya ekleme yap → eskiler kalır ===== */
+/* ===== DAILY MESSAGE ===== */
+const dailyMessages=[
+"Bugün de seni seviyorum",
+"Hala aklımdasın",
+"İyi ki varsın",
+"Kalbim yine sende",
+"Sana sarılacağım günü bekliyorum",
+"Gülüşünü merak ediyorum",
+"Bugün de benimlesin"
+];
+function showDailyMessage(){
+ const day=new Date().getDate();
+ const msg=dailyMessages[day % dailyMessages.length];
+ document.getElementById('dailyMessage').innerText="Bugünün mesajı 💌 — "+msg;
+}
+
+/* ===== LOVE NOTES ===== */
 const loveNotes=[
 "Seninle konuşmak bile günümü değiştiriyor",
 "Gülüşün benim en sevdiğim manzara",
@@ -247,37 +301,25 @@ const loveNotes=[
 "Sen bana iyi geliyorsun",
 "Kalbim sende rahat",
 "Seninle sıradan gün bile özel",
-"En sevdiğim bildirim sensin",
-"Seni merak etmek bile güzel",
-"Yanında susmak bile güzel",
-"Gözlerine bakmak yetiyor",
-"Sen benim huzur alanımsın",
-"Kalbimin yönü sensin",
-"İç sesim bile seni söylüyor",
-"En güzel planım sensin",
-"Seninle gelecek hayal ediyorum",
-"Yanında gülmek kolay",
-"Sen benim güvenli limanım",
-"Varlığın yeter",
-"Kalbim seni görünce yumuşuyor",
-"Sen özel bir detaysın",
-"Hayatıma renk kattın",
-"Sen gelince her şey toparlandı",
-"En sevdiğim tesadüf sensin",
-"İçimdeki en güzel duygu sensin",
-"Seni sevmek çok doğal geliyor",
-"Yanında kalbim evinde gibi",
-"Sen benim kalp atışımın sebebisin",
-"Her halin güzel bana",
-"Seni seçmek en doğru karardı"
+"En sevdiğim bildirim sensin"
 ];
+
 function pullLove(){
  const note=loveNotes[Math.floor(Math.random()*loveNotes.length)];
- document.getElementById('jarText').innerText=note;
+ const el=document.getElementById('jarText');
+ el.style.animation='none';
+ void el.offsetWidth;
+ el.style.animation='notePop .35s ease';
+ el.innerText=note;
 }
 
-/* ===== OYUN ===== */
+/* ===== GAME + BEST SCORE ===== */
 let gameInterval; let score=0;
+function loadBest(){
+ const b=localStorage.bestScore || 0;
+ document.getElementById('best').innerText="En yüksek skor: "+b;
+}
+
 function startGame(){
  score=0;
  document.getElementById('score').innerText='Skor: 0';
@@ -298,12 +340,14 @@ function startGame(){
   area.appendChild(h);
   setTimeout(()=>h.remove(),4000);
  },550);
+
  setTimeout(()=>{
   clearInterval(gameInterval);
+  const best=Math.max(score, localStorage.bestScore||0);
+  localStorage.bestScore=best;
+  loadBest();
   alert('Oyun bitti ❤️ Skor: '+score);
  },15000);
 }
-</script></body>
-</html>
 
-
+</script></body></html>
