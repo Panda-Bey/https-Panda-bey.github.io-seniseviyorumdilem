@@ -1,8 +1,9 @@
 {
- "name":"Surpriz Ask",
- "short_name":"Ask",
+ "name":"Sevgi Sitesi",
+ "short_name":"Sevgi",
  "start_url":"index.html",
  "display":"standalone",
  "background_color":"#ff4e8a",
- "theme_color":"#ff4e8a"
+ "theme_color":"#ff4e8a",
+ "icons":[]
 }
