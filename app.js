@@ -1,198 +1,116 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="UTF-8">
-<title>Sonsuz Sürpriz 💖</title>
-
-<link rel="manifest" href="manifest.json">
-
-<style>
-body{
- margin:0;
- font-family:Arial;
- background:linear-gradient(135deg,#ff4e8a,#ff9ec4);
- color:white;
- overflow:hidden;
+/* ===== INTRO ===== */
+function startSite(){
+ document.getElementById("intro").classList.add("fade");
+ show("home");
 }
 
-#hearts{
- position:fixed;
- inset:0;
- pointer-events:none;
+/* ===== HEART BG ===== */
+for(let i=0;i<30;i++){
+ const h=document.createElement("div");
+ h.className="heart";
+ h.innerText="💖";
+ h.style.left=Math.random()*100+"vw";
+ h.style.fontSize=(16+Math.random()*24)+"px";
+ h.style.animationDuration=(4+Math.random()*6)+"s";
+ document.getElementById("hearts").appendChild(h);
 }
 
-.heart{
- position:absolute;
- animation:fall 6s linear infinite;
- opacity:.5;
+/* ===== MENU ===== */
+function show(id){
+ document.querySelectorAll(".page").forEach(x=>x.style.display="none");
+ document.getElementById(id).style.display="block";
 }
 
-@keyframes fall{
- from{transform:translateY(-10vh)}
- to{transform:translateY(110vh)}
+/* ===== MUSIC ===== */
+function toggleMusic(){
+ const m=document.getElementById("bgm");
+ if(m.paused)m.play(); else m.pause();
 }
 
-#sidebar{
- position:fixed;
- left:0;
- top:0;
- bottom:0;
- width:210px;
- background:#00000055;
- padding:10px;
- overflow:auto;
+/* ===== DAILY NOTE ===== */
+const notes=[...Array(60)].map((_,i)=>"Seni seviyorum not "+(i+1));
+document.getElementById("dailyNote").innerText=
+notes[new Date().getDate()%notes.length];
+
+/* ===== JAR ===== */
+let j=0;
+function kavanozNot(){
+ jarUnlock();
+ document.getElementById("jarText").innerText=notes[j++%notes.length];
 }
 
-button{
- width:100%;
- margin:6px 0;
- padding:10px;
- border:none;
- border-radius:8px;
- background:white;
- color:#ff4e8a;
- font-weight:bold;
- cursor:pointer;
+/* ===== STORY ===== */
+const S={
+a:{t:"Sürpriz yap",c:[["Mesaj","b"],["Oyun","c"]]},
+b:{t:"Mutlu oldu",c:[["Sarıl","d"]]},
+c:{t:"Güldü",c:[["Öp","d"]]},
+d:{t:"Mükemmel son",c:[["Başa dön","a"]]}
+};
+function storyGo(k){
+ const s=S[k];
+ storyUnlock();
+ storyText.innerText=s.t;
+ storyChoices.innerHTML="";
+ s.c.forEach(x=>{
+  const b=document.createElement("button");
+  b.innerText=x[0];
+  b.onclick=()=>storyGo(x[1]);
+  storyChoices.appendChild(b);
+ });
+}
+storyGo("a");
+
+/* ===== HEART GAME ===== */
+let score=0;
+function startHeart(){
+ gameUnlock();
+ score=0;
+ spawn();
+}
+function spawn(){
+ const box=heartGame;
+ const h=document.createElement("div");
+ h.innerText="💖";
+ h.style.position="absolute";
+ h.style.left=Math.random()*260+"px";
+ h.style.top=Math.random()*160+"px";
+ h.onclick=()=>{score++;h.remove();};
+ box.appendChild(h);
+ setTimeout(()=>h.remove(),1200);
+ setTimeout(spawn,700);
 }
 
-#main{
- margin-left:220px;
- padding:20px;
- height:100vh;
- overflow:auto;
+/* ===== COUNTER ===== */
+const start=new Date("2025-02-14");
+setInterval(()=>{
+ const d=Math.floor((Date.now()-start)/86400000);
+ counter.innerText=d+" gün";
+},1000);
+
+/* ===== ACHIEVEMENTS ===== */
+const ach={jar:false,story:false,game:false};
+
+function jarUnlock(){ach.jar=true;renderAch();}
+function storyUnlock(){ach.story=true;renderAch();}
+function gameUnlock(){ach.game=true;renderAch();}
+
+function renderAch(){
+ achList.innerHTML="";
+ Object.entries(ach).forEach(([k,v])=>{
+  const li=document.createElement("li");
+  li.innerText=(v?"🏆 ":"⬜ ")+k;
+  achList.appendChild(li);
+ });
 }
 
-.card{
- background:white;
- color:#333;
- padding:18px;
- border-radius:14px;
- margin-bottom:15px;
+/* ===== SECRET ===== */
+function checkPw(){
+ if(pw.value==="kalbim"){
+  secretText.innerText="Sürpriz mesaj gizli bölüm";
+ }
 }
 
-.page{display:none}
-
-#heartGame{
- position:relative;
- width:300px;
- height:200px;
- background:#ffe6ef;
- border-radius:12px;
- overflow:hidden;
+/* ===== SW ===== */
+if("serviceWorker" in navigator){
+ navigator.serviceWorker.register("sw.js");
 }
-
-#intro{
- position:fixed;
- inset:0;
- background:#000;
- display:flex;
- align-items:center;
- justify-content:center;
- flex-direction:column;
- z-index:5;
-}
-
-.fade{
- animation:fade 2s forwards;
-}
-
-@keyframes fade{
- to{opacity:0;visibility:hidden}
-}
-</style>
-</head>
-
-<body>
-
-<div id="intro">
-<h1>Seni Seviyorum 💗</h1>
-<p>Bu site hep seninle</p>
-<button onclick="startSite()">Giriş</button>
-</div>
-
-<div id="hearts"></div>
-
-<div id="sidebar">
-<button onclick="show('home')">Ana Sayfa</button>
-<button onclick="show('daily')">Günün Notu</button>
-<button onclick="show('jar')">Sevgi Kavanozu</button>
-<button onclick="show('story')">Hikaye Oyunu</button>
-<button onclick="show('game')">Kalp Oyunu</button>
-<button onclick="show('timeline')">İlişki Sayaç</button>
-<button onclick="show('ach')">Rozetler</button>
-<button onclick="show('secret')">Gizli Bölüm 🔒</button>
-<button onclick="toggleMusic()">Müzik Aç/Kapat</button>
-</div>
-
-<div id="main">
-
-<div id="home" class="page">
-<div class="card">
-<h2>Hoşgeldin sevgilim</h2>
-<p>Yanında olamasam da buradayım.</p>
-</div>
-</div>
-
-<div id="daily" class="page">
-<div class="card">
-<h2>Bugünün Mesajı</h2>
-<p id="dailyNote"></p>
-</div>
-</div>
-
-<div id="jar" class="page">
-<div class="card">
-<h2>Kavanoz</h2>
-<p id="jarText">Tıkla</p>
-<button onclick="kavanozNot()">Not Çek</button>
-</div>
-</div>
-
-<div id="story" class="page">
-<div class="card">
-<h2>Mini Hikaye</h2>
-<div id="storyText"></div>
-<div id="storyChoices"></div>
-</div>
-</div>
-
-<div id="game" class="page">
-<div class="card">
-<h2>Kalp Yakala</h2>
-<div id="heartGame"></div>
-<button onclick="startHeart()">Başlat</button>
-</div>
-</div>
-
-<div id="timeline" class="page">
-<div class="card">
-<h2>Tanışalı</h2>
-<p id="counter"></p>
-</div>
-</div>
-
-<div id="ach" class="page">
-<div class="card">
-<h2>Rozetler</h2>
-<ul id="achList"></ul>
-</div>
-</div>
-
-<div id="secret" class="page">
-<div class="card">
-<h2>Şifre Gir</h2>
-<input id="pw">
-<button onclick="checkPw()">Aç</button>
-<p id="secretText"></p>
-</div>
-</div>
-
-</div>
-
-<audio id="bgm" loop>
-<source src="music.mp3">
-</audio>
-
-<script src="app.js"></script>
-</body>
-</html>
