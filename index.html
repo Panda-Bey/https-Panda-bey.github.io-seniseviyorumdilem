@@ -350,4 +350,67 @@ function startGame(){
  },15000);
 }
 
-</script></body></html>
+</script><!-- Yakında Gelecek Bölümler --><section id="coming-soon" style="margin-top:40px;text-align:center;">
+  <h2>💌 Çok Yakında Gelecek</h2>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:20px;">
+    <div class="soon-card">📸 Birlikte Fotoğraf Galerimiz<br><small>Yakında eklenecek</small></div>
+    <div class="soon-card">🎵 Sana Özel Şarkı Listesi<br><small>Yakında eklenecek</small></div>
+    <div class="soon-card">🕹️ Yeni Mini Oyun<br><small>Yakında eklenecek</small></div>
+    <div class="soon-card">📆 Özel Gün Sayacı<br><small>Yakında eklenecek</small></div>
+  </div>
+</section><style>
+.soon-card{
+  background: rgba(255,255,255,0.12);
+  border-radius:16px;
+  padding:18px 22px;
+  width:200px;
+  backdrop-filter: blur(6px);
+  border:1px solid rgba(255,255,255,0.2);
+  font-size:14px;
+}
+</style><!-- Yeni Mini Oyun: Kalbi Yakala --><section id="mini-game" style="margin-top:50px;text-align:center;">
+  <h2>💖 Kalbi Yakala Oyunu</h2>
+  <p>Kalplere tıkla, puan topla 😄</p>
+  <div id="gameArea" style="position:relative;width:320px;height:320px;margin:20px auto;border-radius:16px;border:2px dashed #ff6b9d;overflow:hidden;"></div>
+  <div>Puan: <span id="score">0</span></div>
+  <button onclick="startHeartGame()">Oyunu Başlat</button>
+</section><script>
+let heartScore = 0;
+let heartGameInterval = null;
+
+function startHeartGame(){
+  heartScore = 0;
+  document.getElementById('score').innerText = heartScore;
+  const area = document.getElementById('gameArea');
+  area.innerHTML = '';
+  if(heartGameInterval) clearInterval(heartGameInterval);
+
+  heartGameInterval = setInterval(()=>{
+    spawnHeart();
+  }, 700);
+}
+
+function spawnHeart(){
+  const area = document.getElementById('gameArea');
+  const heart = document.createElement('div');
+  heart.innerText = '💗';
+  heart.style.position = 'absolute';
+  heart.style.fontSize = '28px';
+  heart.style.cursor = 'pointer';
+  heart.style.left = Math.random()*280 + 'px';
+  heart.style.top = Math.random()*280 + 'px';
+
+  heart.onclick = () => {
+    heartScore++;
+    document.getElementById('score').innerText = heartScore;
+    heart.remove();
+  };
+
+  area.appendChild(heart);
+
+  setTimeout(()=>{
+    heart.remove();
+  }, 1200);
+}
+</script></body>
+</html>
