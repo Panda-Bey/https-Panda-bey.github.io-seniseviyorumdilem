@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sana Özel ❤️</title>
+
+<style>
+body{
+ margin:0;
+ font-family:Segoe UI,sans-serif;
+ background:linear-gradient(135deg,#ff4e8a,#ff9ecb);
+ color:white;
+}
+
+#intro{
+ position:fixed;
+ inset:0;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ background:linear-gradient(135deg,#ff4e8a,#ff9ecb);
+}
+
+.box{
+ background:rgba(255,255,255,.2);
+ padding:30px;
+ border-radius:20px;
+ backdrop-filter:blur(10px);
+}
+
+button{
+ padding:12px 18px;
+ border:none;
+ border-radius:12px;
+ background:white;
+ color:#ff4e8a;
+ font-size:16px;
+ cursor:pointer;
+ margin:6px;
+}
+
+#app{display:none}
+
+.sidebar{
+ width:220px;
+ background:rgba(0,0,0,.25);
+ padding:10px;
+ float:left;
+ height:100vh;
+}
+
+.content{
+ margin-left:220px;
+ padding:20px;
+}
+
+.card{
+ background:rgba(255,255,255,.2);
+ padding:20px;
+ border-radius:18px;
+}
+
+.section{display:none}
+.section.active{display:block}
+
+.jar{font-size:80px;cursor:pointer}
+
+#game{
+ height:300px;
+ position:relative;
+ background:rgba(255,255,255,.2);
+ border-radius:14px;
+ overflow:hidden;
+}
+
+.heart{
+ position:absolute;
+ font-size:26px;
+ cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div id="intro">
+ <div class="box">
+  <h1>Seni Seviyorum ❤️</h1>
+  <p>Bu site her zaman yanında olacak</p>
+  <button onclick="start()">Evet</button>
+  <button onclick="start()">Evet 💖</button>
+ </div>
+</div>
+
+<div id="app">
+
+ <div class="sidebar">
+  <button onclick="openSec('home')">Ana Sayfa</button>
+  <button onclick="openSec('jar')">Kavanoz</button>
+  <button onclick="openSec('gameSec')">Kalp Oyunu</button>
+  <button onclick="openSec('story')">Mini Hikaye</button>
+ </div>
+
+ <div class="content">
+
+  <div id="home" class="section active card">
+   Hoş geldin sevgilim 💌
+  </div>
+
+  <div id="jar" class="section card">
+   <div class="jar" onclick="note()">🏺</div>
+   <p id="noteText"></p>
+  </div>
+
+  <div id="gameSec" class="section card">
+   <button onclick="startGame()">Oyunu Başlat</button>
+   <div id="game"></div>
+   <div id="score">Skor: 0</div>
+  </div>
+
+  <div id="story" class="section card">
+   <div id="storyText"></div>
+   <button onclick="nextStory()">Devam</button>
+  </div>
+
+ </div>
+</div>
+
+<script>
+
+function start(){
+ document.getElementById("intro").style.display="none";
+ document.getElementById("app").style.display="block";
+}
+
+function openSec(id){
+ document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+}
+
+/* ===== KAVANOZ ===== */
+
+const notes=[
+"Seni seviyorum",
+"İyi ki varsın",
+"Kalbim sende",
+"En güzel tesadüf sensin",
+"Gülüşün yeter",
+"Yanında zaman duruyor",
+"Benim huzurumsun",
+"Her gün seni seçerim"
+];
+
+function note(){
+ document.getElementById("noteText").innerText=
+ notes[Math.floor(Math.random()*notes.length)];
+}
+
+/* ===== OYUN ===== */
+
+let score=0;
+
+function startGame(){
+ const area=document.getElementById("game");
+ area.innerHTML="";
+ score=0;
+ document.getElementById("score").innerText="Skor: 0";
+
+ const spawn=setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="❤️";
+  h.style.left=Math.random()*90+"%";
+  h.style.top="-20px";
+
+  h.onclick=()=>{
+   score++;
+   document.getElementById("score").innerText="Skor: "+score;
+   h.remove();
+  };
+
+  area.appendChild(h);
+
+  let y=0;
+  const fall=setInterval(()=>{
+   y+=4;
+   h.style.top=y+"px";
+   if(y>320){ clearInterval(fall); h.remove();}
+  },30);
+
+ },600);
+
+ setTimeout(()=>clearInterval(spawn),15000);
+}
+
+/* ===== HİKAYE ===== */
+
+const story=[
+"Bir mesaj geldi...",
+"Kalbim hızlandı...",
+"Çünkü o sendin",
+"Ve hikaye burada başladı ❤️"
+];
+
+let si=0;
+function nextStory(){
+ document.getElementById("storyText").innerText=story[si];
+ si++;
+ if(si>=story.length) si=0;
+}
+
+</script>
+</body>
+</html>
