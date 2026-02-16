@@ -8,12 +8,14 @@
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background: radial-gradient(circle at top,#ff7eb3,#ff4e8a,#c9184a);
-  color:white;
+ margin:0;
+ font-family:'Segoe UI',sans-serif;
+ background: radial-gradient(circle at top,#ff7eb3,#ff4e8a,#c9184a);
+ color:white;
+ transition:1s;
 }
 
+/* INTRO */
 #intro{
  position:fixed; inset:0;
  display:flex; align-items:center; justify-content:center;
@@ -27,18 +29,10 @@ body{
  border-radius:22px;
  padding:34px;
  max-width:620px;
+ box-shadow:0 15px 40px rgba(0,0,0,.3);
 }
 
-button{
- background:white;
- color:#ff4e8a;
- border:none;
- padding:12px 18px;
- border-radius:12px;
- cursor:pointer;
- margin:6px;
-}
-
+/* LAYOUT */
 #app{display:none}
 .layout{display:flex; min-height:100vh}
 
@@ -47,93 +41,105 @@ button{
  background:rgba(0,0,0,.28);
  padding:18px 10px;
 }
-
-.menu-btn{width:100%; margin:6px 0}
+.menu-btn{width:100%; margin:7px 0}
 
 .content{flex:1; padding:28px}
 
 .card{
  background:rgba(255,255,255,.16);
+ backdrop-filter:blur(12px);
  border-radius:22px;
  padding:26px;
- max-width:900px;
+ box-shadow:0 12px 34px rgba(0,0,0,.25);
+ max-width:920px;
 }
 
 .section{display:none}
 .section.active{display:block}
 
-/* kavanoz */
-.jar{font-size:90px; cursor:pointer}
-
-/* oyun alanları */
-#gameArea, #catchArea{
- position:relative;
- height:320px;
- background:rgba(255,255,255,.12);
- border-radius:20px;
- overflow:hidden;
- margin-top:12px;
-}
-
-.heart{
- position:absolute;
- font-size:28px;
+button{
+ background:white;
+ color:#ff4e8a;
+ border:none;
+ padding:12px 18px;
+ border-radius:12px;
  cursor:pointer;
 }
 
-.gallery{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
- gap:12px
+/* KAVANOZ */
+.jar{font-size:90px; cursor:pointer}
+
+/* OYUN */
+#gameArea{
+ position:relative;
+ height:300px;
+ background:rgba(255,255,255,.12);
+ border-radius:20px;
+ overflow:hidden;
 }
-.gallery img{
- width:100%;
- border-radius:14px;
- height:140px;
- object-fit:cover
+.heart{
+ position:absolute;
+ font-size:26px;
+ cursor:pointer;
+ animation:fall linear forwards;
+}
+@keyframes fall{
+ from{transform:translateY(-40px)}
+ to{transform:translateY(340px)}
 }
 
-@media(max-width:720px){
- .layout{flex-direction:column}
- .sidebar{width:100%; display:flex; gap:8px; overflow-x:auto}
- .menu-btn{flex:1}
+/* ASK MODU */
+.love-mode{
+ background: radial-gradient(circle at top,#ff99cc,#ff3366,#990033) !important;
 }
+.floating-heart{
+ position:fixed;
+ font-size:22px;
+ pointer-events:none;
+ animation:floatUp 4s linear forwards;
+ z-index:9999;
+}
+@keyframes floatUp{
+ from{transform:translateY(0); opacity:1}
+ to{transform:translateY(-120vh); opacity:0}
+}
+
 </style>
 </head>
 
 <body>
 
 <audio id="bgMusic" loop>
-<source src="music.mp3" type="audio/mpeg">
+ <source src="music.mp3" type="audio/mpeg">
 </audio>
 
+<!-- INTRO -->
 <div id="intro">
  <div class="intro-box">
   <h1>Seni Seviyorum ❤️</h1>
-  <p>Bu site büyümeye devam edecek sevgilim</p>
+  <p>Sevgililer günün kutlu olsun sevgilim. Bu site hep yanında olacak.</p>
+  <h3>Beni seviyor musun?</h3>
   <button onclick="startApp()">Evet</button>
   <button onclick="startApp()">Evet 💖</button>
  </div>
 </div>
 
+<!-- APP -->
 <div id="app" class="layout">
 
 <div class="sidebar">
 <button class="menu-btn" onclick="showSection('home')">Ana Sayfa</button>
 <button class="menu-btn" onclick="showSection('jar')">Sevgi Kavanozu</button>
-<button class="menu-btn" onclick="showSection('game')">Kalp Yağmuru</button>
-<button class="menu-btn" onclick="showSection('catch')">Kalbi Yakala</button>
-<button class="menu-btn" onclick="showSection('letter')">Mektup</button>
-<button class="menu-btn" onclick="showSection('gallery')">Foto Galeri</button>
-<button class="menu-btn" onclick="showSection('soon1')">Sürpriz Alanı</button>
-<button class="menu-btn" onclick="showSection('soon2')">Gizli Bölüm</button>
+<button class="menu-btn" onclick="showSection('game')">Kalp Oyunu</button>
+<button class="menu-btn" onclick="showSection('click')">Kalbi Yakala</button>
+<button class="menu-btn" onclick="toggleLoveMode()">Aşk Modu 💞</button>
 </div>
 
 <div class="content">
 
 <div id="home" class="section active">
 <div class="card">
-<h2>Hoş geldin 💌</h2>
+<h2>Hoş geldin sevgilim 💌</h2>
 <button onclick="toggleMusic()">Müzik Aç/Kapat</button>
 </div>
 </div>
@@ -148,46 +154,19 @@ button{
 
 <div id="game" class="section">
 <div class="card">
-<h2>Kalp Yağmuru</h2>
-<button onclick="startRain()">Başlat</button>
+<h2>Kalp Toplama Oyunu</h2>
+<button onclick="startGame()">Başlat</button>
 <div id="gameArea"></div>
-<div>Skor: <span id="score1">0</span></div>
+<div id="score">Skor: 0</div>
 </div>
 </div>
 
-<div id="catch" class="section">
+<div id="click" class="section">
 <div class="card">
-<h2>Kalbi Yakala 💖</h2>
-<button onclick="startCatch()">Başlat</button>
-<div id="catchArea"></div>
-<div>Puan: <span id="score2">0</span></div>
-</div>
-</div>
-
-<div id="letter" class="section">
-<div class="card">
-Sen hayatıma iyi gelen en güzel şeysin
-</div>
-</div>
-
-<div id="gallery" class="section">
-<div class="card">
-<div class="gallery"></div>
-Yakında burası bizim fotoğraflarla dolacak
-</div>
-</div>
-
-<div id="soon1" class="section">
-<div class="card">
-<h2>🚧 Çok Yakında</h2>
-<p>Sana özel mini quiz geliyor</p>
-</div>
-</div>
-
-<div id="soon2" class="section">
-<div class="card">
-<h2>🔒 Gizli Bölüm</h2>
-<p>Sadece özel gün açılacak</p>
+<h2>Kalbi Yakala ⚡</h2>
+<button onclick="startClickGame()">Başlat</button>
+<div id="clickArea" style="height:260px;position:relative;background:rgba(255,255,255,.15);border-radius:20px"></div>
+<div id="clickScore">Skor: 0</div>
 </div>
 </div>
 
@@ -196,66 +175,87 @@ Yakında burası bizim fotoğraflarla dolacak
 
 <script>
 function startApp(){
- intro.style.display='none'
- app.style.display='flex'
- bgMusic.play().catch(()=>{})
+ intro.style.display="none";
+ app.style.display="flex";
+ bgMusic.volume=.6;
+ bgMusic.play().catch(()=>{});
 }
 
 function toggleMusic(){
- bgMusic.paused ? bgMusic.play() : bgMusic.pause()
+ bgMusic.paused ? bgMusic.play() : bgMusic.pause();
 }
 
 function showSection(id){
- document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'))
- document.getElementById(id).classList.add('active')
+ document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
 }
 
-/* kavanoz */
-const notes=["Seni seviyorum","İyi ki varsın","Kalbim sende"]
+/* NOTLAR */
+const loveNotes=["Seni seviyorum","İyi ki varsın","Kalbim senin","Gülüşün mucize"];
 function pullLove(){
- jarText.innerText = notes[Math.floor(Math.random()*notes.length)]
+ jarText.innerText=loveNotes[Math.floor(Math.random()*loveNotes.length)];
 }
 
-/* kalp yağmuru */
-let rInt, rScore=0
+/* OYUN 1 */
+let gi,score=0;
+function startGame(){
+ score=0; scoreEl=score;
+ score=0;
+ scoreDiv.innerText="Skor: 0";
+ gameArea.innerHTML="";
+ clearInterval(gi);
+ gi=setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="❤️";
+  h.style.left=Math.random()*90+"%";
+  h.style.animationDuration="3s";
+  h.onclick=()=>{score++;scoreDiv.innerText="Skor: "+score;h.remove();}
+  gameArea.appendChild(h);
+  setTimeout(()=>h.remove(),3000);
+ },600);
+ setTimeout(()=>clearInterval(gi),15000);
+}
+const scoreDiv=document.getElementById("score");
+
+/* OYUN 2 */
+function startClickGame(){
+ let s=0;
+ clickScore.innerText="Skor: 0";
+ const area=document.getElementById("clickArea");
+ area.innerHTML="";
+ const iv=setInterval(()=>{
+  const h=document.createElement("div");
+  h.innerText="💖";
+  h.style.position="absolute";
+  h.style.fontSize="30px";
+  h.style.left=Math.random()*90+"%";
+  h.style.top=Math.random()*80+"%";
+  h.onclick=()=>{s++;clickScore.innerText="Skor: "+s;h.remove();}
+  area.appendChild(h);
+  setTimeout(()=>h.remove(),900);
+ },700);
+ setTimeout(()=>clearInterval(iv),15000);
+}
+
+/* ASK MODU */
+let loveMode=false, rain;
+function toggleLoveMode(){
+ loveMode=!loveMode;
+ document.body.classList.toggle("love-mode");
+ if(loveMode){startRain(); bgMusic.volume=.9;}
+ else{clearInterval(rain); bgMusic.volume=.6;}
+}
 function startRain(){
- rScore=0
- score1.innerText=0
- gameArea.innerHTML=''
- clearInterval(rInt)
- rInt=setInterval(()=>{
-  const h=document.createElement('div')
-  h.className='heart'
-  h.innerText='❤️'
-  h.style.left=Math.random()*90+'%'
-  h.style.top='-20px'
-  h.onclick=()=>{rScore++;score1.innerText=rScore;h.remove()}
-  gameArea.appendChild(h)
-  let y=0
-  const fall=setInterval(()=>{
-    y+=4; h.style.top=y+'px'
-    if(y>320){h.remove();clearInterval(fall)}
-  },30)
- },600)
-}
-
-/* kalbi yakala */
-let cInt, cScore=0
-function startCatch(){
- cScore=0
- score2.innerText=0
- catchArea.innerHTML=''
- clearInterval(cInt)
- cInt=setInterval(()=>{
-  const h=document.createElement('div')
-  h.className='heart'
-  h.innerText='💗'
-  h.style.left=Math.random()*280+'px'
-  h.style.top=Math.random()*280+'px'
-  h.onclick=()=>{cScore++;score2.innerText=cScore;h.remove()}
-  catchArea.appendChild(h)
-  setTimeout(()=>h.remove(),1200)
- },700)
+ rain=setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="floating-heart";
+  h.innerText="❤️";
+  h.style.left=Math.random()*100+"vw";
+  h.style.bottom="-20px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),4000);
+ },200);
 }
 </script>
 
