@@ -276,5 +276,62 @@ function startGame(){
 }
 
 </script>
+ <!-- ZAMBAK BİLDİRİMİ -->
+
+<div id="iosNotif">
+  <div class="notif-header">
+    <span>🌸 Mesaj</span>
+    <span>şimdi</span>
+  </div>
+  <div class="notif-body">
+    Senin için küçük bir sürpriz bıraktım…
+  </div>
+</div>
+
+<style>
+
+#iosNotif{
+  position:fixed;
+  top:-120px;
+  left:50%;
+  transform:translateX(-50%);
+  width:320px;
+  background:rgba(40,40,40,0.95);
+  color:white;
+  padding:14px;
+  border-radius:18px;
+  font-family:sans-serif;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  cursor:pointer;
+  transition:0.6s;
+  z-index:9999;
+  backdrop-filter:blur(10px);
+}
+
+.notif-header{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  opacity:0.8;
+  margin-bottom:4px;
+}
+
+.notif-body{
+  font-size:15px;
+}
+
+</style>
+
+<script>
+
+setTimeout(function(){
+  document.getElementById("iosNotif").style.top="20px";
+},1200);
+
+document.getElementById("iosNotif").onclick=function(){
+  window.open("https://panda-bey.github.io/","_blank"); // BURAYA ZAMBAK SAYFASI LINKİNİ KOY
+}
+
+</script>
 </body>
 </html>
