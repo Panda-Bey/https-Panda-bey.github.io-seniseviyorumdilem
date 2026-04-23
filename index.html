@@ -2,299 +2,55 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sevgililer Günümüz Kutlu Olsun ❤️</title>
+<title>Veda</title>
 
 <style>
-*{box-sizing:border-box}
-
-body{
- margin:0;
- font-family:'Segoe UI',sans-serif;
- background: radial-gradient(circle at top,#ff7eb3,#ff4e8a,#c9184a);
- color:white;
+body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
 }
 
-/* INTRO */
-
-#intro{
- position:fixed;
- inset:0;
- display:flex;
- align-items:center;
- justify-content:center;
- text-align:center;
- padding:30px;
- background:linear-gradient(135deg,#ff4e8a,#ff9ecb);
- z-index:9999; /* Burası üstte */
+.container {
+    max-width: 600px;
+    opacity: 0;
+    animation: fadeIn 2s forwards;
 }
 
-.intro-box{
- background:rgba(255,255,255,.18);
- backdrop-filter:blur(12px);
- border-radius:22px;
- padding:34px;
- max-width:620px;
+@keyframes fadeIn {
+    to { opacity: 1; }
 }
 
-button{
- background:white;
- color:#ff4e8a;
- border:none;
- padding:12px 18px;
- border-radius:12px;
- font-size:15px;
- cursor:pointer;
- margin:6px;
-}
-
-/* LAYOUT */
-
-#app{display:none}
-.layout{display:flex; min-height:100vh}
-
-.sidebar{
- width:220px;
- background:rgba(0,0,0,.28);
- padding:18px 10px;
-}
-
-.menu-btn{
- width:100%;
- margin:6px 0;
-}
-
-.content{
- flex:1;
- padding:28px;
-}
-
-.card{
- background:rgba(255,255,255,.16);
- backdrop-filter:blur(12px);
- border-radius:22px;
- padding:26px;
-}
-
-/* SECTIONS */
-
-.section{display:none}
-.section.active{display:block}
-
-/* JAR */
-
-.jar{
- font-size:90px;
- cursor:pointer;
-}
-
-#jarText{
- font-size:20px;
- margin-top:14px;
- min-height:60px;
-}
-
-/* GAME */
-
-#gameArea{
- position:relative;
- height:320px;
- background:rgba(255,255,255,.12);
- border-radius:20px;
- overflow:hidden;
- margin-top:12px;
-}
-
-.heart{
- position:absolute;
- font-size:28px;
- cursor:pointer;
-}
-
-/* MOBILE */
-
-@media(max-width:720px){
- .layout{flex-direction:column}
- .sidebar{width:100%; display:flex; gap:8px; overflow-x:auto}
- .menu-btn{flex:1}
-}
-
-/* --- ZAMBAK BİLDİRİMİ --- */
-
-#iosNotif{
-  position:fixed;
-  top:-120px;
-  left:50%;
-  transform:translateX(-50%);
-  width:320px;
-  background:rgba(40,40,40,0.95);
-  color:white;
-  padding:14px;
-  border-radius:18px;
-  font-family:sans-serif;
-  box-shadow:0 10px 30px rgba(0,0,0,0.4);
-  cursor:pointer;
-  transition:0.6s;
-  z-index:10000; /* kesin üstte olsun */
-  backdrop-filter:blur(10px);
-}
-
-.notif-header{
-  display:flex;
-  justify-content:space-between;
-  font-size:13px;
-  opacity:0.8;
-  margin-bottom:4px;
-}
-
-.notif-body{
-  font-size:15px;
+p {
+    line-height: 1.6;
+    font-size: 18px;
 }
 </style>
-</head>
 
+</head>
 <body>
 
-<!-- AUDIO -->
-<audio id="bgMusic" loop>
- <source src="music.mp3" type="audio/mpeg">
-</audio>
+<div class="container">
+    <p>
+        Bu siteyi sana bir şeyleri güzel yaşatalım diye yapmıştım.<br><br>
+        Ama bazı şeyler her zaman planladığımız gibi gitmiyor.<br><br>
+        Yine de yaşadığımız her şey benim için gerçekti.<br><br>
+        Kırgınlık yok, pişmanlık da yok.<br><br>
+        Sadece yolumuz burada bitmiş gibi.<br><br>
+        Kendine iyi bak…
+    </p>
 
-<!-- INTRO -->
-<div id="intro">
- <div class="intro-box">
-  <h1>Seni Seviyorum ❤️</h1>
-  <p>
-   Yanında olamasam da bu site hep yanında.
-   Ara ara yeni sürprizler eklenecek.
-  </p>
-  <h3>Beni seviyor musun?</h3>
-  <button onclick="startApp()">Evet</button>
-  <button onclick="startApp()">Evet 💖</button>
- </div>
+    <br><br>
+
+    <h3>Bu site artık mevcut değil.</h3>
 </div>
 
-<!-- ZAMBAK BİLDİRİMİ -->
-<div id="iosNotif">
-  <div class="notif-header">
-    <span>🌸 Mesaj</span>
-    <span>şimdi</span>
-  </div>
-  <div class="notif-body">
-    Senin için küçük bir sürpriz bıraktım…
-  </div>
-</div>
-
-<!-- APP -->
-<div id="app" class="layout">
-
- <div class="sidebar">
-  <button class="menu-btn" onclick="showSection('home')">Ana Sayfa</button>
-  <button class="menu-btn" onclick="showSection('jar')">Sevgi Kavanozu</button>
-  <button class="menu-btn" onclick="showSection('game')">Kalp Oyunu</button>
- </div>
-
- <div class="content">
-
-  <div id="home" class="section active">
-   <div class="card">
-    <h2>Hoş geldin sevgilim 💌</h2>
-    <button onclick="toggleMusic()">Müziği Aç / Kapat</button>
-   </div>
-  </div>
-
-  <div id="jar" class="section">
-   <div class="card">
-    <h2>Sevgi Kavanozu</h2>
-    <div class="jar" onclick="pullLove()">🏺</div>
-    <div id="jarText"></div>
-   </div>
-  </div>
-
-  <div id="game" class="section">
-   <div class="card">
-    <h2>Kalp Oyunu ❤️</h2>
-    <button onclick="startGame()">Başlat</button>
-    <div id="gameArea"></div>
-    <div id="score">Skor: 0</div>
-   </div>
-  </div>
-
- </div>
-</div>
-
-<script>
-/* INTRO START */
-function startApp(){
- document.getElementById('intro').style.display='none';
- document.getElementById('app').style.display='flex';
- const m=document.getElementById('bgMusic');
- if(m){ m.volume=0.6; m.play().catch(()=>{}); }
-
- // Bildirimi göster
- setTimeout(()=>{
-   document.getElementById("iosNotif").style.top="20px";
- },500);
-}
-
-/* BİLDİRİM TIKLAMA */
-document.getElementById("iosNotif").onclick=function(){
- window.open("https://panda-bey.github.io","_blank"); // zambak.html ile değiştir
-}
-
-/* MUSIC */
-function toggleMusic(){
- const m=document.getElementById('bgMusic');
- if(m.paused) m.play();
- else m.pause();
-}
-
-/* MENU */
-function showSection(id){
- document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
- document.getElementById(id).classList.add('active');
-}
-
-/* LOVE JAR */
-const loveNotes=[
-"Seni seviyorum","İyi ki varsın","Kalbim sende","Gülüşün yeter",
-"Yanında huzur buluyorum","En güzel tesadüf sensin","Her gün seni seçerim",
-"Benim evim sensin"
-];
-function pullLove(){
- const note=loveNotes[Math.floor(Math.random()*loveNotes.length)];
- document.getElementById('jarText').innerText=note;
-}
-
-/* GAME */
-let gameTimer;
-function startGame(){
- const area=document.getElementById('gameArea');
- area.innerHTML='';
- let score=0;
- document.getElementById('score').innerText="Skor: 0";
- clearInterval(gameTimer);
- gameTimer=setInterval(()=>{
-  const h=document.createElement('div');
-  h.className='heart';
-  h.innerText='❤️';
-  h.style.left=Math.random()*90+'%';
-  h.style.top='-20px';
-  h.onclick=()=>{
-   score++;
-   document.getElementById('score').innerText="Skor: "+score;
-   h.remove();
-  };
-  area.appendChild(h);
-  let y=0;
-  const fall=setInterval(()=>{
-   y+=4;
-   h.style.top=y+'px';
-   if(y>320){clearInterval(fall); h.remove();}
-  },30);
- },600);
- setTimeout(()=>{clearInterval(gameTimer); alert("Oyun bitti ❤️");},15000);
-}
-</script>
 </body>
 </html>
