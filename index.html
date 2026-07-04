@@ -42,6 +42,10 @@ body{
     to{transform:translateY(100px);}
 }
 
+audio{
+    display:none;
+}
+
 .container{
     max-width:750px;
     z-index:2;
@@ -134,6 +138,11 @@ button:hover{
 </head>
 <body>
 
+<!-- Arka plan müzik -->
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
 <div class="rain"></div>
 
 <div class="container">
@@ -166,12 +175,22 @@ const WEBHOOK_URL = "https://discord.com/api/webhooks/1522993557605056623/rTyqX5
 const startTime = Date.now();
 let answered = false;
 
-/* Sayfadan çıkış logu */
+/* İlk tıklamada müzik başlar */
+window.addEventListener("click", () => {
+    const music = document.getElementById("bgMusic");
+    music.volume = 0.20;
+    music.play();
+}, { once: true });
+
+/* Cevap vermeden çıkarsa log */
 window.addEventListener("beforeunload", function () {
     if(!answered){
-        navigator.sendBeacon(WEBHOOK_URL, JSON.stringify({
-            content: "🚪 Siteye girdi ama cevap vermeden çıktı."
-        }));
+        navigator.sendBeacon(
+            WEBHOOK_URL,
+            JSON.stringify({
+                content: "🚪 Siteye girdi ama cevap vermeden çıktı."
+            })
+        );
     }
 });
 
