@@ -2,55 +2,244 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Veda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eksik Kalan Şeyler</title>
 
 <style>
-body {
-    margin: 0;
-    padding: 0;
-    background: black;
-    color: white;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background: linear-gradient(to bottom, #050505, #111);
+    color:white;
     font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    text-align: center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    overflow:hidden;
+    text-align:center;
 }
 
-.container {
-    max-width: 600px;
-    opacity: 0;
-    animation: fadeIn 2s forwards;
+/* Yağmur efekti */
+.rain{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background-image: repeating-linear-gradient(
+        transparent,
+        transparent 20px,
+        rgba(255,255,255,0.04) 22px
+    );
+    animation: rain .6s linear infinite;
 }
 
-@keyframes fadeIn {
-    to { opacity: 1; }
+@keyframes rain{
+    from{transform:translateY(-100px);}
+    to{transform:translateY(100px);}
 }
 
-p {
-    line-height: 1.6;
-    font-size: 18px;
+.container{
+    max-width:750px;
+    z-index:2;
+    padding:20px;
+}
+
+h1{
+    font-size:48px;
+    color:#ff4d6d;
+    margin-bottom:30px;
+    text-shadow:0 0 20px rgba(255,77,109,.7);
+    animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+    50%{opacity:.7;}
+}
+
+.line{
+    opacity:0;
+    font-size:22px;
+    margin:18px 0;
+    animation:fadeUp 2s forwards;
+}
+
+.line:nth-child(2){animation-delay:2s;}
+.line:nth-child(3){animation-delay:5s;}
+.line:nth-child(4){animation-delay:8s;}
+.line:nth-child(5){animation-delay:11s;}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.reply-box{
+    margin-top:35px;
+    opacity:0;
+    animation:showBox 2s forwards;
+    animation-delay:14s;
+}
+
+@keyframes showBox{
+    to{opacity:1;}
+}
+
+input{
+    width:320px;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    outline:none;
+    text-align:center;
+    font-size:16px;
+}
+
+button{
+    margin-top:15px;
+    padding:12px 28px;
+    border:none;
+    border-radius:10px;
+    background:#ff4d6d;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+#response{
+    margin-top:25px;
+    font-size:24px;
+    min-height:40px;
+}
+
+#secondQuestion{
+    margin-top:30px;
+    opacity:0;
+    transition:1s;
 }
 </style>
-
 </head>
 <body>
 
+<div class="rain"></div>
+
 <div class="container">
-    <p>
-        Bu siteyi sana bir şeyleri güzel yaşatalım diye yapmıştım.<br><br>
-        Ama bazı şeyler her zaman planladığımız gibi gitmiyor.<br><br>
-        Yine de yaşadığımız her şey benim için gerçekti.<br><br>
-        Kırgınlık yok, pişmanlık da yok.<br><br>
-        Sadece yolumuz burada bitmiş gibi.<br><br>
-        Kendine iyi bak…
-    </p>
+    <h1>Hiç Özledin mi?</h1>
 
-    <br><br>
+    <div class="line">Bazı insanlar gider...</div>
+    <div class="line">Ama bıraktıkları his kolay kaybolmaz.</div>
+    <div class="line">Bazen bir şarkıda, bazen bir cümlede geri gelirler.</div>
+    <div class="line">Ve bazen insan sadece tek bir şeyi merak eder...</div>
 
-    <h3>Bu site artık mevcut değil.</h3>
+    <div class="reply-box">
+        <p style="margin-bottom:15px;">Peki... beni hiç özledin mi?</p>
+        <input type="text" id="answer" placeholder="Belki söyleyemediğin şeyler vardır...">
+        <br>
+        <button id="sendBtn" onclick="reply()">Gönder</button>
+    </div>
+
+    <div id="response"></div>
+
+    <div id="secondQuestion">
+        <p style="margin-bottom:15px;">Peki... geri dönmek ister miydin?</p>
+        <input type="text" id="answer2" placeholder="Son bir şey söyle...">
+        <br>
+        <button onclick="replySecond()">Son Cevap</button>
+    </div>
 </div>
+
+<script>
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1522993557605056623/rTyqX5_x8Ocju3FuF4nuUiIwX693IZk-KRCQP9tswTzfrebtnHUpb6c2WOoWC2aCtZUg";
+const startTime = Date.now();
+let answered = false;
+
+/* Sayfadan çıkış logu */
+window.addEventListener("beforeunload", function () {
+    if(!answered){
+        navigator.sendBeacon(WEBHOOK_URL, JSON.stringify({
+            content: "🚪 Siteye girdi ama cevap vermeden çıktı."
+        }));
+    }
+});
+
+function reply(){
+    let answer = document.getElementById("answer").value.trim();
+    let response = document.getElementById("response");
+
+    if(answer === ""){
+        response.innerHTML = "Boş bırakamazsın...";
+        return;
+    }
+
+    answered = true;
+
+    const stayTime = Math.floor((Date.now() - startTime) / 1000);
+
+    fetch(WEBHOOK_URL,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            content:
+`💬 İlk cevap geldi
+
+📝 Cevap: ${answer}
+
+🕒 Tarih: ${new Date().toLocaleString("tr-TR")}
+📱 Cihaz: ${navigator.platform}
+🌍 Tarayıcı: ${navigator.userAgent}
+⏳ Sayfada kalma: ${stayTime} saniye`
+        })
+    })
+    .then(()=>{
+        response.innerHTML = "Cevabın bana ulaştı...";
+        document.getElementById("answer").disabled = true;
+        document.getElementById("sendBtn").disabled = true;
+
+        setTimeout(()=>{
+            document.getElementById("secondQuestion").style.opacity = "1";
+        },3000);
+    });
+}
+
+function replySecond(){
+    let answer2 = document.getElementById("answer2").value.trim();
+
+    if(answer2 === "") return;
+
+    fetch(WEBHOOK_URL,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            content:
+`❤️ İkinci cevap geldi
+
+📝 Cevap: ${answer2}
+
+🕒 Tarih: ${new Date().toLocaleString("tr-TR")}`
+        })
+    });
+
+    document.getElementById("secondQuestion").innerHTML =
+    "<h2>Bazı şeyler bitse bile izleri kalır...</h2>";
+}
+</script>
 
 </body>
 </html>
